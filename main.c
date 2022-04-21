@@ -5,6 +5,7 @@
 #include "send_recv_matrix.h"
 
 Matrix2D *scatter(Matrix2D *matrix2D, int num_rows, int num_cols, int num_procs, int current_rank);
+Matrix1D *broadcast_multiply_vector(Matrix1D *multiply_vector, int num_procs, int current_rank);
 
 int main(int argc, char** argv)
 {
@@ -35,7 +36,55 @@ int main(int argc, char** argv)
     }
     printf("Process %d: ", rank);
     print_matrix2D(scattered_matrix2D);
+
+    Matrix1D *multiply_vector = NULL;
+    if (rank == 0)
+    {
+        multiply_vector = create_Matrix1D(7);
+        for (int i = 0; i < 7; i++)
+        {
+            set_matrix1D_value(multiply_vector, i, i);
+        }
+    }
+    multiply_vector = broadcast_multiply_vector(multiply_vector, numprocs, rank);
+    printf("multiply Process %d: ", rank);
+    print_matrix1D(multiply_vector);
+
     MPI_Finalize();
+}
+
+Matrix1D *broadcast_multiply_vector(Matrix1D *multiply_vector, int num_procs, int current_rank)
+{
+    const int VECTOR_SIZE_FLAG = 1;
+    const int VECTOR_DATA_FLAG = 2;
+    if(current_rank == 0)
+    {
+        // send matrix size
+        MPI_Send(&multiply_vector->N, 1, MPI_INT, 1, VECTOR_SIZE_FLAG, MPI_COMM_WORLD);
+        // send matrix data
+        send_matrix1D(multiply_vector, 1, VECTOR_DATA_FLAG);
+        return multiply_vector;
+    }
+    else
+    {
+        // receive matrix size
+        int size;
+        MPI_Recv(&size, 1, MPI_INT, current_rank - 1, VECTOR_SIZE_FLAG, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+        if (current_rank < num_procs - 1)
+        {
+            // send matrix size
+            MPI_Send(&size, 1, MPI_INT, current_rank + 1, VECTOR_SIZE_FLAG, MPI_COMM_WORLD);
+        }
+        // receive matrix data
+        Matrix1D *received_vector = create_Matrix1D(size);
+        recv_matrix1D(received_vector, VECTOR_DATA_FLAG);
+        if (current_rank < num_procs - 1)
+        {
+            // send matrix data
+            send_matrix1D(received_vector, current_rank + 1, VECTOR_DATA_FLAG);
+        }
+        return received_vector;
+    }
 }
 
 Matrix2D *scatter(Matrix2D *matrix2D, int num_rows, int num_cols, int num_procs, int current_rank)
@@ -52,8 +101,8 @@ Matrix2D *scatter(Matrix2D *matrix2D, int num_rows, int num_cols, int num_procs,
     Matrix2D *return_matrix2d = create_matrix2D(lines_per_node, num_cols);
     for(int i = 0; i < (num_procs - current_rank) * lines_per_node; i++)
     {
-        Matrix1D *matrix1D = createMatrix1D(num_cols);
-        recv_matrix1D(matrix1D);
+        Matrix1D *matrix1D = create_Matrix1D(num_cols);
+        recv_matrix1D(matrix1D, 0);
         const int first_line = (num_procs - current_rank - 1) * lines_per_node;
         if (i >= first_line)
         {
@@ -61,7 +110,7 @@ Matrix2D *scatter(Matrix2D *matrix2D, int num_rows, int num_cols, int num_procs,
         }
         else
         {
-            send_matrix1D(matrix1D, current_rank + 1);
+            send_matrix1D(matrix1D, current_rank + 1, 0);
             destroy_matrix1D(matrix1D);
         }
     }

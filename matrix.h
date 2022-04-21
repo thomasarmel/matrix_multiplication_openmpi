@@ -7,7 +7,7 @@ struct matrix1D {
 };
 typedef struct matrix1D Matrix1D;
 
-Matrix1D *createMatrix1D(int size);
+Matrix1D *create_Matrix1D(int size);
 void destroy_matrix1D(Matrix1D *matrix);
 int get_matrix1D_value(Matrix1D *matrix, int pos);
 void set_matrix1D_value(Matrix1D *matrix, int pos, int value);

@@ -48,7 +48,7 @@ void print_matrix2D(Matrix2D *matrix)
     printf("\n");
 }
 
-Matrix1D *createMatrix1D(int size)
+Matrix1D *create_Matrix1D(int size)
 {
     Matrix1D *matrix = (Matrix1D *)malloc(sizeof(Matrix1D));
     matrix->N = size;
@@ -84,7 +84,7 @@ void print_matrix1D(Matrix1D *matrix)
 
 Matrix1D *get_matrix2D_line(Matrix2D *matrix, int line)
 {
-    Matrix1D *matrix1D = createMatrix1D(matrix->columns);
+    Matrix1D *matrix1D = create_Matrix1D(matrix->columns);
     for (int i = 0; i < matrix->columns; i++)
     {
         matrix1D->M[i] = matrix->tab[line][i];
