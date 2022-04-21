@@ -28,5 +28,6 @@ void print_matrix2D(Matrix2D *matrix);
 
 Matrix1D *get_matrix2D_line(Matrix2D *matrix, int line);
 void set_matrix2D_line(Matrix2D *matrix, int line, const Matrix1D *line_matrix);
+Matrix2D *extract_matrix2D_lines(const Matrix2D *matrix, int start_line, int end_line);
 
 #endif //OPENMPI2_MATRIX_H

@@ -99,3 +99,16 @@ void set_matrix2D_line(Matrix2D *matrix, int line, const Matrix1D *line_matrix)
         matrix->tab[line][i] = line_matrix->M[i];
     }
 }
+
+Matrix2D *extract_matrix2D_lines(const Matrix2D *matrix, int start_line, int end_line)
+{
+    Matrix2D *matrix2D = create_matrix2D(end_line - start_line, matrix->columns);
+    for (int i = start_line; i < end_line; i++)
+    {
+        for(int j = 0; j < matrix->columns; j++)
+        {
+            matrix2D->tab[i - start_line][j] = matrix->tab[i][j];
+        }
+    }
+    return matrix2D;
+}

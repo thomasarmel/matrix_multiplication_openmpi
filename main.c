@@ -41,21 +41,15 @@ int main(int argc, char** argv)
 Matrix2D *scatter(Matrix2D *matrix2D, int num_rows, int num_cols, int num_procs, int current_rank)
 {
     int lines_per_node = num_rows / num_procs;
-    Matrix2D *return_matrix2d = create_matrix2D(lines_per_node, num_cols);
     if (current_rank == 0)
     {
         for(int i = num_rows - 1; i >= 1; i--)
         {
             send_matrix2D_line(matrix2D, 1, i);
         }
-        // TODO: optimize
-        for(int i = 0; i < lines_per_node; i++)
-        {
-            Matrix1D *line = get_matrix2D_line(matrix2D, i);
-            set_matrix2D_line(return_matrix2d, i, line);
-        }
-        return return_matrix2d;
+        return extract_matrix2D_lines(matrix2D, 0, lines_per_node);
     }
+    Matrix2D *return_matrix2d = create_matrix2D(lines_per_node, num_cols);
     for(int i = 0; i < (num_procs - current_rank) * lines_per_node; i++)
     {
         Matrix1D *matrix1D = createMatrix1D(num_cols);
