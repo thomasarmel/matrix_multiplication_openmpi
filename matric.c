@@ -43,8 +43,9 @@ void print_matrix2D(Matrix2D *matrix)
         {
             printf("%d ", matrix->tab[i][j]);
         }
-        printf("\n");
+        printf("//");
     }
+    printf("\n");
 }
 
 Matrix1D *createMatrix1D(int size)
@@ -89,4 +90,12 @@ Matrix1D *get_matrix2D_line(Matrix2D *matrix, int line)
         matrix1D->M[i] = matrix->tab[line][i];
     }
     return matrix1D;
+}
+
+void set_matrix2D_line(Matrix2D *matrix, int line, const Matrix1D *line_matrix)
+{
+    for (int i = 0; i < matrix->columns; i++)
+    {
+        matrix->tab[line][i] = line_matrix->M[i];
+    }
 }
