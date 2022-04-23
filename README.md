@@ -24,5 +24,7 @@ git clone https://github.com/thomasarmel/matrix_multiplication_openmpi.git
 cd matrix_multiplication_openmpi
 cmake .
 make
-mpirun -np <number of processes> ./matmult <matrix file> <vector file>
+mpirun -np <number of processes> ./matmult <matrix file> <vector file> [<output file>]
 ```
+
+By default, output file is `output.txt`.

@@ -13,7 +13,7 @@ int main(int argc, char **argv)
     int rank, numprocs;
     MPI_Comm_size(MPI_COMM_WORLD, &numprocs);
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-    const char *OUTPUT_VECTOR_FILENAME = "output_vector.txt";
+    const char *OUTPUT_VECTOR_FILENAME = "output.txt";
 
     if (argc < 3)
     {
@@ -37,6 +37,11 @@ int main(int argc, char **argv)
     Matrix1D *multiply_vector = NULL;
     const char *MATRIX_FILENAME = argv[1];
     const char *VECTOR_FILENAME = argv[2];
+    if (argc > 3)
+    {
+        OUTPUT_VECTOR_FILENAME = argv[3];
+    }
+
     if (rank == 0)
     {
         Matrix2D *entry_matrix2D = read_matrix_from_file(MATRIX_FILENAME);
