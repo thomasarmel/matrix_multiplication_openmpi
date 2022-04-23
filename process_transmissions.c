@@ -60,17 +60,17 @@ Matrix2D *scatter(Matrix2D *matrix2D, int num_procs, int current_rank)
     Matrix2D *return_matrix2d = create_matrix2D(lines_per_node, num_cols);
     for (int i = 0; i < (num_procs - current_rank) * lines_per_node; i++)
     {
-        Matrix1D *matrix1D = create_Matrix1D(num_cols);
-        recv_matrix1D(matrix1D, FLAG_SCATTER_DATA);
+        Matrix1D *received_matrix1D = create_Matrix1D(num_cols);
+        recv_matrix1D(received_matrix1D, FLAG_SCATTER_DATA);
         const int first_line = (num_procs - current_rank - 1) * lines_per_node;
         if (i >= first_line)
         {
-            set_matrix2D_line(return_matrix2d, lines_per_node - 1 - (i - first_line), matrix1D);
+            set_matrix2D_line(return_matrix2d, lines_per_node - 1 - (i - first_line), received_matrix1D);
         } else
         {
-            send_matrix1D(matrix1D, current_rank + 1, FLAG_SCATTER_DATA);
-            destroy_matrix1D(matrix1D);
+            send_matrix1D(received_matrix1D, current_rank + 1, FLAG_SCATTER_DATA);
         }
+        destroy_matrix1D(received_matrix1D);
     }
     return return_matrix2d;
 }

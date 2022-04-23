@@ -66,6 +66,7 @@ int main(int argc, char **argv)
     multiply_vector = broadcast_multiply_vector(multiply_vector, numprocs, rank);
 
     Matrix1D *multiplication_result = multiply_Matrix2D_by_vector1D(scattered_matrix2D, multiply_vector);
+    destroy_matrix2D(scattered_matrix2D);
     destroy_matrix1D(multiply_vector);
     if (multiplication_result == NULL) // Matrix and vector size don't match
     {
