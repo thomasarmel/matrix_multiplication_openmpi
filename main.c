@@ -23,6 +23,15 @@ int main(int argc, char **argv)
         MPI_exit(1);
     }
 
+    if (numprocs < 2)
+    {
+        if (rank == 0)
+        {
+            fprintf(stderr, "Need at least 2 processes\n");
+        }
+        MPI_exit(5);
+    }
+
     Matrix2D *scattered_matrix2D = NULL;
     Matrix1D *multiply_vector = NULL;
     const char *MATRIX_FILENAME = argv[1];
