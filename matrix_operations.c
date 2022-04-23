@@ -1,9 +1,9 @@
 #include <stdlib.h>
 #include "matrix_operations.h"
 
-Matrix1D *multiply_Matrix2D_by_vector1D(Matrix2D *matrix, Matrix1D *vector)
+Matrix1D *multiply_Matrix2D_by_vector1D(const Matrix2D *matrix, const Matrix1D *vector)
 {
-    if (vector->N != matrix->columns)
+    if (vector->N != matrix->columns) // Bad matrix / vector format
     {
         return NULL;
     }

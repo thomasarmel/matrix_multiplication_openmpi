@@ -25,7 +25,7 @@ void destroy_matrix2D(Matrix2D *matrix)
     free(matrix);
 }
 
-int get_matrix2D_value(Matrix2D *matrix, int row, int column)
+int get_matrix2D_value(const Matrix2D *matrix, int row, int column)
 {
     return matrix->tab[row][column];
 }
@@ -62,7 +62,7 @@ void destroy_matrix1D(Matrix1D *matrix)
     free(matrix);
 }
 
-int get_matrix1D_value(Matrix1D *matrix, int pos)
+int get_matrix1D_value(const Matrix1D *matrix, int pos)
 {
     return matrix->M[pos];
 }
@@ -82,7 +82,7 @@ void print_matrix1D(Matrix1D *matrix)
     printf(")\n");
 }
 
-Matrix1D *get_matrix2D_line(Matrix2D *matrix, int line)
+Matrix1D *get_matrix2D_line(const Matrix2D *matrix, int line)
 {
     Matrix1D *matrix1D = create_Matrix1D(matrix->columns);
     for (int i = 0; i < matrix->columns; i++)

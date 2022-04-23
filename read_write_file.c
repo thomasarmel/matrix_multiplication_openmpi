@@ -13,23 +13,23 @@ Matrix2D *read_matrix_from_file(const char *filename)
     // Count rows and columns
     int rows = 0;
     int columns = 0;
-    int current_columns = 0;
+    int current_columns = 0; // To check if all rows have the same number of columns
     int is_first_line = 1;
     int c;
     int previous_c = 0;
     while ((c = fgetc(file)) != EOF)
     {
-        if (c == '\r')
+        if (c == '\r') // Ignore carriage return
         {
             continue;
         }
         if (c == '\n')
         {
-            if (previous_c == '\n')
+            if (previous_c == '\n') // End of matrix
             {
                 break;
             }
-            if (previous_c != ' ')
+            if (previous_c != ' ') // Handle missinng whitespace at the end of the line
             {
                 if (is_first_line)
                 {
@@ -39,7 +39,7 @@ Matrix2D *read_matrix_from_file(const char *filename)
             }
             rows++;
             is_first_line = 0;
-            if (current_columns != columns) // Bad file format
+            if (current_columns != columns) // Bad file format, all rows must have the same number of columns
             {
                 fclose(file);
                 return NULL;
@@ -65,7 +65,7 @@ Matrix2D *read_matrix_from_file(const char *filename)
         fclose(file);
         return NULL;
     }
-    rewind(file);
+    rewind(file); // Beginning of file
     // Allocate memory for matrix
     Matrix2D *return_matrix = create_matrix2D(rows, columns);
 
@@ -94,7 +94,7 @@ Matrix1D *read_vector_from_file(const char *filename)
     int previous_c = 0;
     while ((c = fgetc(file)) != EOF)
     {
-        if (c == '\r')
+        if (c == '\r') // Ignore carriage return
         {
             continue;
         }
@@ -112,7 +112,7 @@ Matrix1D *read_vector_from_file(const char *filename)
     {
         rows++;
     }
-    rewind(file);
+    rewind(file); // Beginning of file
     Matrix1D *return_vector = create_Matrix1D(rows);
     for (int i = 0; i < rows; i++)
     {
