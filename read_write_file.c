@@ -1,5 +1,5 @@
 #include <stdio.h>
-#include "read_input_file.h"
+#include "read_write_file.h"
 
 Matrix2D *read_matrix_from_file(const char *filename)
 {
@@ -120,4 +120,21 @@ Matrix1D *read_vector_from_file(const char *filename)
     }
     fclose(file);
     return return_vector;
+}
+
+int write_vector_to_file(const char *filename, Matrix1D *vector)
+{
+    // Open file
+    FILE *file = fopen(filename, "w");
+    if (file == NULL)
+    {
+        return -1;
+    }
+    // Write vector to file
+    for (int i = 0; i < vector->N; i++)
+    {
+        fprintf(file, "%d \n", vector->M[i]);
+    }
+    fclose(file);
+    return 0;
 }

@@ -3,16 +3,17 @@
 #include <stdlib.h>
 #include "process_transmissions.h"
 #include "matrix_operations.h"
-#include "read_input_file.h"
+#include "read_write_file.h"
 
 void MPI_exit(int code);
 
 int main(int argc, char **argv)
 {
-    int rank, numprocs;
     MPI_Init(&argc, &argv);
+    int rank, numprocs;
     MPI_Comm_size(MPI_COMM_WORLD, &numprocs);
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+    const char *OUTPUT_VECTOR_FILENAME = "output_vector.txt";
 
     if (argc < 3)
     {
@@ -80,6 +81,7 @@ int main(int argc, char **argv)
     {
         printf("Result: ");
         print_matrix1D(result_matrix);
+        write_vector_to_file( OUTPUT_VECTOR_FILENAME, result_matrix);
         destroy_matrix1D(result_matrix);
     }
 
