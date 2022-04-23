@@ -4,6 +4,7 @@
 #include "matrix.h"
 #include "send_recv_matrix.h"
 #include "transmission_flags.h"
+#include "matrix_operations.h"
 
 Matrix2D *scatter(Matrix2D *matrix2D, int num_procs, int current_rank);
 
@@ -20,6 +21,7 @@ int main(int argc, char **argv)
     Matrix2D *scattered_matrix2D = NULL;
     const int MATRIX_COLS = 6;
     const int MATRIX_ROWS = numprocs * 3;
+    const int MULTIPLY_VECTOR_SIZE = 6;
     if (rank == 0)
     {
         Matrix2D *matrix2D = create_matrix2D(MATRIX_ROWS, MATRIX_COLS);
@@ -43,11 +45,15 @@ int main(int argc, char **argv)
     Matrix1D *multiply_vector = NULL;
     if (rank == 0)
     {
-        multiply_vector = create_Matrix1D(7);
-        for (int i = 0; i < 7; i++)
+        multiply_vector = create_Matrix1D(MULTIPLY_VECTOR_SIZE);
+        for (int i = 0; i < MULTIPLY_VECTOR_SIZE; i++)
         {
             set_matrix1D_value(multiply_vector, i, i);
         }
+        Matrix1D *multiplication_result = multiply_Matrix2D_by_vector1D(scattered_matrix2D, multiply_vector);
+        printf("Multiplication result for process 0: ");
+        print_matrix1D(multiplication_result);
+        destroy_matrix1D(multiplication_result);
     }
     multiply_vector = broadcast_multiply_vector(multiply_vector, numprocs, rank);
     printf("multiply Process %d: ", rank);
