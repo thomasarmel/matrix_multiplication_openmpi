@@ -7,6 +7,35 @@
 
 void MPI_exit(int code);
 
+/**
+ * @brief Main function
+ * @param argc
+ * @param argv Parameters
+ * @return 0 if everything went well, a positive value otherwise
+ * @note Cost analysing (without latency):
+ * Let's suppose we run the program using a square matrix of size NxN, and P processes simultaneously.
+ * Reading and writing the matrix isn't taken into account.
+ * So first of all, process 0 will have to scatter the matrix to all the other processes.
+ * Because matrix is sent line by line, first process will have to send N - N/P lines, so N * (N - N/P) integers.
+ * The second process will have to send N * (N - 2N/P) integers, so N^2 * (1 - 2/P) integers.
+ * Finally, the mean complexity per process is O(N ^ 2)
+ * And the total cost of scatter is O(P * N^2)
+ *
+ * For sharing the multiplication vector of size N, each process except the last one has to send it to the next process.
+ * So the cost per process is O(N), the total cost is O(P * N)
+ *
+ * After calculating the partial matrix multiplication, each process will have to send the result to the previous process.
+ * Result is one integer per matrix line.
+ * So then the process 0 will gather the results from all the other processes.
+ * The last process will have to send 1 * N/P integers to the previous one.
+ * This process, after receiving the result, will have to send his result to the previous process.
+ * So N/P + N/P integers.
+ * In average, the cost per process is O(N)
+ * So the total cost is O(P * N)
+ *
+ *
+ * Finally, the total cost of the program is O(P * N^2) + O(P * N) + O(P * N) = O(P * N^2)
+ */
 int main(int argc, char **argv)
 {
     MPI_Init(&argc, &argv);
